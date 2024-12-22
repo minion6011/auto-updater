@@ -1,4 +1,5 @@
 import os
+import os.path
 import requests
 import json
 import base64
@@ -24,6 +25,15 @@ def download_file(url):
 		print(f"[ERROR] Request Status code: {str(response.status_code)}")
 		return None
 
+def check_file(filename, new_content):
+	if os.path.isfile(filename):
+		with open(filename, "r", encoding="utf-8", newline="\n") as file:
+			old_content = file.read()
+		if old_content == new_content:
+			return True
+		else:
+			return False
+
 def update_file(filename, content):
 	directory = os.path.dirname(filename)
 	if directory and not os.path.exists(directory):
@@ -40,10 +50,13 @@ def run_autoupdater():
 		print(f"[LOG] Checking for updates for '{filename}'")
 		file_content = download_file(file_url)
 		if file_content is not None:
-			file_content = json.loads(file_content)
-			file_content = file_content["content"]
-			file_content = base64.b64decode(file_content).decode("utf-8")
-			update_file(filename, file_content)
+			if check_file(filename, file_content) == False:
+				print(f"[LOG] '{filename}' it's already up to date")
+			else:
+				file_content = json.loads(file_content)
+				file_content = file_content["content"]
+				file_content = base64.b64decode(file_content).decode("utf-8")
+				update_file(filename, file_content)
 		else:
 			print(f"[ERROR] Unable to get data for '{filename}'") #If this happens, check that the API Key is valid or that the file name is correct
 	print("[LOG] Autoupdater completed")
