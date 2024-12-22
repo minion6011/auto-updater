@@ -4,20 +4,22 @@ import requests
 import json
 import base64
 
-
 # - Config
 
-github_repo_url = "https://api.github.com/repos/user_name/reposity_name" # Reposity Link
-api_token = "" # Github Token
-files_to_update = [ # Names of files that the autoupdater should update
-	"requirements.txt",
-	"main.py",
-]
+with open("updater_config.json") as f:
+	try:
+		config = json.load(f)
+	except json.decoder.JSONDecodeError as e:
+		print("[ERROR] Error in updater_config.json")
+
+api_key = config["github_api_token"]
+files_to_update = config["files_to_update"]
+url = config["github_reposity_url"]
 
 # - Code
 
 def download_file(url):
-	headers = {"Authorization": f"token {api_token}"}
+	headers = {"Authorization": f"token {api_key}"}
 	response = requests.get(url, headers=headers)
 	if response.status_code == 200:
 		return response.text
@@ -46,7 +48,7 @@ def update_file(filename, content):
 def run_autoupdater():
 	print("[LOG] Autoupdater started")
 	for filename in files_to_update:
-		file_url = f"{github_repo_url}/contents/{filename}"
+		file_url = f"{url}/contents/{filename}"
 		print(f"[LOG] Checking for updates for '{filename}'")
 		file_content = download_file(file_url)
 		if file_content is not None:
