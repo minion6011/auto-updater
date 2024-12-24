@@ -52,7 +52,7 @@ def run_autoupdater():
 		print(f"[LOG] Checking for updates for '{filename}'")
 		file_content = download_file(file_url)
 		if file_content is not None:
-			if check_file(filename, file_content) == False:
+			if check_file(filename, file_content) == True:
 				print(f"[LOG] '{filename}' it's already up to date")
 			else:
 				file_content = json.loads(file_content)
