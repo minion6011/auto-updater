@@ -31,12 +31,20 @@ def download_file(url):
 
 def check_file(filename, new_content):
 	if os.path.isfile(filename):
-		with open(filename, "r", encoding="utf-8", newline="\n") as file:
-			old_content = file.read()
-		if old_content == new_content:
-			return True
+		if filename.endswith(img_ext):
+			with open(filename, "rb") as file:
+				old_content = file.read()
+			if old_content == new_content:
+				return True
+			else:
+				return False
 		else:
-			return False
+			with open(filename, "r", encoding="utf-8", newline="\n") as file:
+				old_content = file.read()
+			if old_content == new_content:
+				return True
+			else:
+				return False
 
 def update_file(filename, content):
 	directory = os.path.dirname(filename)
