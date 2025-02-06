@@ -16,6 +16,8 @@ api_key = config["github_api_token"]
 files_to_update = config["files_to_update"]
 url = config["github_reposity_url"]
 
+img_ext = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp')
+
 # - Code
 
 def download_file(url):
@@ -41,8 +43,13 @@ def update_file(filename, content):
 	if directory and not os.path.exists(directory):
 		os.makedirs(directory)
 		print(f"[LOG] Folder '{directory}' created.")
-	with open(filename, "w", encoding="utf-8", newline='\n') as file:
-		file.write(content)
+	if filename.endswith(img_ext):
+		with open(filename, "wb") as file:
+			file.write(content)
+	else:
+		content = content.decode("utf-8")
+		with open(filename, "w", encoding="utf-8", newline='\n') as file:
+			file.write(content)
 	print(f"[LOG] File '{filename}' updated")
 
 def run_autoupdater():
@@ -57,7 +64,7 @@ def run_autoupdater():
 			else:
 				file_content = json.loads(file_content)
 				file_content = file_content["content"]
-				file_content = base64.b64decode(file_content).decode("utf-8")
+				file_content = base64.b64decode(file_content)
 				update_file(filename, file_content)
 		else:
 			print(f"[ERROR] Unable to get data for '{filename}'") #If this happens, check that the API Key is valid or that the file name is correct
