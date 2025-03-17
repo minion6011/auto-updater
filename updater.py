@@ -16,7 +16,7 @@ api_key = config["github_api_token"]
 files_to_update = config["files_to_update"]
 url = config["github_reposity_url"]
 
-img_ext = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.ico')
+bin_ext = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.ico')
 
 # - Code
 
@@ -31,7 +31,7 @@ def download_file(url):
 
 def check_file(filename, new_content):
 	if os.path.isfile(filename):
-		if filename.endswith(img_ext):
+		if filename.endswith(bin_ext):
 			with open(filename, "rb") as file:
 				old_content = file.read()
 			if old_content == new_content:
@@ -51,7 +51,7 @@ def update_file(filename, content):
 	if directory and not os.path.exists(directory):
 		os.makedirs(directory)
 		print(f"[LOG] Folder '{directory}' created.")
-	if filename.endswith(img_ext):
+	if filename.endswith(bin_ext):
 		with open(filename, "wb") as file:
 			file.write(content)
 	else:
