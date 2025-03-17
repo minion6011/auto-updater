@@ -16,7 +16,7 @@ api_key = config["github_api_token"]
 files_to_update = config["files_to_update"]
 url = config["github_reposity_url"]
 
-bin_ext = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.ico')
+bin_ext = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.ico', ".ttf")
 
 # - Code
 
